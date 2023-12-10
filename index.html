@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <title>Weather</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap");
+        * {
+            box-sizing: border-box;
+        }
+        .card
+        {
+            background: linear-gradient(135deg,#54f3f0,#ea83f6);
+            width: 500px;
+            
+            border-radius: 30px;
+            height: 500px;
+            margin: auto;
+            box-shadow: 0 10px 10px 0 rgb(101, 100, 100);
+            transition: 3s;
+            margin-top: 200px;
+        }
+        input {
+            padding: 1rem;
+            border-radius: 25px;
+            border: none;
+            background-color: #fff;
+            font-family: inherit;
+            box-shadow: 0 4px 50px rgba(0, 0, 0, 0.2);
+            min-width: 300px;
+            font-size: 1rem;
+            margin-left: 95px;
+            margin-top: 50px;
+        }
+        input:focus {
+            outline: none;
+        }
+        .weather {
+            text-align: center;
+            font-size: 2rem;
+        }
+        .weathe
+        {
+            align-items: center;
+        }
+        .weather h2 {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* margin-left: 50px; */
+        } /* .weather img{ transform: scale(2); } */
+    </style>
+</head>
+
+<body>
+    <div class="card">
+    <form id="form">
+        <input type="text" id="search" placeholder="Search By Loaction" autocomplete="off">&nbsp;
+        <!-- <button onclick="search"><i style="font-size:24px" class="fa" onclick="search()">&#xf002;</i></button> -->
+    </form>
+     <!-- <div class="weathe">
+
+     </div> -->
+
+
+    <main id="main">
+    
+    </main>
+    </div>
+
+    <script>
+        const apiKey = "66ce53dd59bacf64c2110ff34886b970";
+        
+        const main = document.getElementById('main');
+        const form = document.getElementById('form');
+        const search = document.getElementById('search');
+        
+        const url = (city)=> `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+        //  document.querySelector(".weathe").innerHTML=data.name;
+
+
+        async function getWeatherByLocation(city){
+            
+                const resp = await fetch(url(city), {
+                    origin: "cros" });
+                const respData = await resp.json();
+            
+                addWeatherToPage(respData);
+                
+            }
+
+            function addWeatherToPage(data){
+                const temp = Ktoc(data.main.temp);
+                // const town = Ktoc(data.name);
+                const weather = document.createElement('div')
+                weather.classList.add('weather');
+
+                weather.innerHTML = `
+                <h2><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" /> ${temp}°C <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" /></h2>
+                <small>${data.weather[0].main}</small>
+                
+                `;
+
+
+                //   cleanup 
+                main.innerHTML= "";
+                main.appendChild(weather);
+            };
+
+
+            function Ktoc(K){
+                return Math.floor(K - 273.15);
+            }
+
+
+
+            form.addEventListener('submit',(e) =>{
+                e.preventDefault();
+
+                const city = search.value;
+
+                if(city){
+                    getWeatherByLocation(city)
+                }
+
+            });
+
+            // function search()
+            // {
+            //     const city = search.value;
+            //     getWeatherByLocation(city)
+            // }
+    </script>
+</body>
+
+</html>
